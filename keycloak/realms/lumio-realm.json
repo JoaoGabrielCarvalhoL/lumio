@@ -1,0 +1,45 @@
+{
+  "realm": "lumio",
+  "enabled": true,
+  "users": [
+    {
+      "username": "joaocruz",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "João Gabriel",
+      "lastName": "Carvalho Lopes da Cruz",
+      "email": "21.joaogabriel@gmail.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "development",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["ADMIN", "OWNER"]
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "ADMIN"
+      }, 
+	  {
+	    "name": "OWNER"
+	  }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "lumio-app",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "zLSuklji5eOXajRKUHhfhFLuz30com1u",
+      "redirectUris": ["http://localhost:8080/*"],
+      "webOrigins": ["http://localhost:8080"],
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true
+    }
+  ]
+}
