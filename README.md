@@ -46,7 +46,7 @@ This project is licensed under the [MIT License](LICENSE).
 1. Clone the repository
 2. Build the project with Maven
 3. Start images of container: `docker compose up`
-4. Run Docker container: `mvn quarkus:dev`
+4. Run application: `mvn quarkus:dev`
 
 --- 
 
