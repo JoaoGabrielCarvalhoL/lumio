@@ -1,13 +1,12 @@
-[![Build Status](https://github.com/JoaoGabrielCarvalhoL/lumio/actions/workflows/ci.yml/badge.svg)](https://github.com/JoaoGabrielCarvalhoL/lumio/actions/workflows/ci.yml)  
-[![Coverage](https://img.shields.io/badge/coverage-0%25-red)](#)  
-[![License](https://img.shields.io/github/license/JoaoGabrielCarvalhoL/lumio)](LICENSE)
+[![Build Status](https://github.com/JoaoGabrielCarvalhoL/lumio/actions/workflows/ci-main.yml/badge.svg)](https://github.com/JoaoGabrielCarvalhoL/lumio/actions/workflows/ci-main.yml)  
+[![Coverage](https://img.shields.io/badge/coverage-0%25-red)](#)
 
 <h1 align="center">✨ Lumio</h1>
 <p align="center"><i>Learn Brighter. Go Further</i></p>
 
 ## 🚀 About Lumio
 
-**Lumio** — *Learn Brighter. Go Further.*
+**Lumio** — _Learn Brighter. Go Further._
 
 Lumio is an ambitious commercial platform designed to redefine the way people learn and share knowledge online. The goal is to build a comprehensive digital marketplace where educators and creators can publish, manage, and monetize high-quality educational content across a wide range of subjects.
 
@@ -52,11 +51,11 @@ This project is licensed under the [MIT License](LICENSE).
 3. Start images of container: `docker compose up`
 4. Run application: `mvn quarkus:dev`
 
---- 
+---
 
 ## Generate JaCoCo Report
 
 3. Run tests and generate coverage report: `mvn clean test`
 4. Open the report in:: `target/site/jacoco/index.html`
 
---- 
+---
