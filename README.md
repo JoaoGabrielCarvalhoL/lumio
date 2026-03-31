@@ -1,4 +1,6 @@
-[![Build Status](https://github.com/JoaoGabrielCarvalhoL/lumio/actions/workflows/ci.yml/badge.svg)] (https://github.com/JoaoGabrielCarvalhoL/lumio/actions/workflows/ci.yml)  [![Coverage](https://img.shields.io/badge/coverage-0%25-red)](#)  [![License](https://img.shields.io/github/license/JoaoGabrielCarvalhoL/lumio)](LICENSE)
+[![Build Status](https://github.com/JoaoGabrielCarvalhoL/lumio/actions/workflows/ci.yml/badge.svg)](https://github.com/JoaoGabrielCarvalhoL/lumio/actions/workflows/ci.yml)  
+[![Coverage](https://img.shields.io/badge/coverage-0%25-red)](#)  
+[![License](https://img.shields.io/github/license/JoaoGabrielCarvalhoL/lumio)](LICENSE)
 
 <h1 align="center">✨ Lumio</h1>
 <p align="center"><i>Learn Brighter. Go Further</i></p>
