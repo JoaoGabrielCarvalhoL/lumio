@@ -1,72 +1,61 @@
-# lumio
+[![Build Status](https://github.com/JoaoGabrielCarvalhoL/lumio/actions/workflows/ci-main.yml/badge.svg)](https://github.com/JoaoGabrielCarvalhoL/lumio/actions/workflows/ci-main.yml)  
+[![Coverage](https://img.shields.io/badge/coverage-0%25-red)](#)
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+<h1 align="center">✨ Lumio</h1>
+<p align="center"><i>Learn Brighter. Go Further</i></p>
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+## 🚀 About Lumio
 
-## Running the application in dev mode
+**Lumio** — _Learn Brighter. Go Further._
 
-You can run your application in dev mode that enables live coding using:
+Lumio is an ambitious commercial platform designed to redefine the way people learn and share knowledge online. The goal is to build a comprehensive digital marketplace where educators and creators can publish, manage, and monetize high-quality educational content across a wide range of subjects.
 
-```shell script
-./mvnw quarkus:dev
-```
+Inspired by leading platforms like Udemy and Alura, Lumio aims to go beyond the standard learning experience by integrating modern, interactive features such as real-time chat and live streaming for immersive, instructor-led sessions.
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+### 💡 Vision
 
-## Packaging and running the application
+To create a powerful, scalable, and engaging learning ecosystem that empowers both students and educators — making knowledge more accessible, interactive, and valuable.
 
-The application can be packaged using:
+### ⚙️ Tech Stack
 
-```shell script
-./mvnw package
-```
+The backend is being built with a robust and modern architecture, including:
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+- **Java 25**
+- **Quarkus** for high-performance
+- **Keycloak** for authentication and identity management
+- **AWS services** for scalability and cloud infrastructure
+- **Messaging systems** for asynchronous communication and event-driven design
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+### 🔮 Planned Features
 
-If you want to build an _über-jar_, execute the following command:
+- Course marketplace (buy/sell educational content)
+- Video-based lessons and structured learning paths
+- Real-time chat between students and instructors
+- Live streaming for interactive classes
+- User authentication and role-based access control
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
+---
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+Lumio is more than just a platform — it's a step toward a smarter, more connected future of learning.
 
-## Creating a native executable
+## 📄 License
 
-You can create a native executable using:
+This project is licensed under the [MIT License](LICENSE).
 
-```shell script
-./mvnw package -Dnative
-```
+---
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+## Setup
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
+1. Clone the repository
+2. Build the project with Maven
+3. Start images of container: `docker compose up`
+4. Run application: `mvn quarkus:dev`
 
-You can then execute your native executable with: `./target/lumio-1.0.0-SNAPSHOT-runner`
+---
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+## Generate JaCoCo Report
 
-## Related Guides
+3. Run tests and generate coverage report: `mvn clean test`
+4. Open the report in:: `target/site/jacoco/index.html`
 
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- REST Client ([guide](https://quarkus.io/guides/rest-client)): Call REST services
-- SmallRye JWT ([guide](https://quarkus.io/guides/security-jwt)): Secure your applications with JSON Web Token
-- SmallRye Health ([guide](https://quarkus.io/guides/smallrye-health)): Monitor service health
-- JDBC Driver - PostgreSQL ([guide](https://quarkus.io/guides/datasource)): Connect to the PostgreSQL database via JDBC
-- Micrometer metrics ([guide](https://quarkus.io/guides/micrometer)): Instrument the runtime and your application with dimensional metrics using Micrometer.
-- Micrometer Registry Prometheus ([guide](https://quarkus.io/guides/micrometer)): Enable Prometheus support for Micrometer
-- JDBC Driver - H2 ([guide](https://quarkus.io/guides/datasource)): Connect to the H2 database via JDBC
-- Hibernate Validator ([guide](https://quarkus.io/guides/validation)): Validate object properties (field, getter) and method parameters for your beans (REST, CDI, Jakarta Persistence)
-- SmallRye OpenAPI ([guide](https://quarkus.io/guides/openapi-swaggerui)): Document your REST APIs with OpenAPI - comes with Swagger UI
-- OpenID Connect ([guide](https://quarkus.io/guides/security-openid-connect)): Verify Bearer access tokens and authenticate users with Authorization Code Flow
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
-- Mailer ([guide](https://quarkus.io/guides/mailer)): Send emails
-- Cache ([guide](https://quarkus.io/guides/cache)): Enable application data caching in CDI beans
-- Amazon S3 ([guide](https://docs.quarkiverse.io/quarkus-amazon-services/dev/amazon-s3.html)): Connect to Amazon S3 cloud storage
+---

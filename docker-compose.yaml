@@ -1,0 +1,89 @@
+services:
+  localstack:
+    container_name: ${LOCALSTACK_DOCKER_NAME}
+    image: localstack/localstack
+    ports:
+      - '127.0.0.1:4566:4566'
+      - '127.0.0.1:4510-4559:4510-4559'
+    environment:
+      DEBUG: ${DEBUG}
+      LOCALSTACK_AUTH_TOKEN: ${LOCALSTACK_AUTH_TOKEN}
+    volumes:
+      - localstack-data:/var/lib/localstack
+      - ./localstack/init:/etc/localstack/init/ready.d
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - lumio-network
+    restart: unless-stopped
+
+  mail-dev:
+    container_name: mail-dev-lumio
+    image: maildev/maildev:latest
+    ports:
+      - '1080:1080'
+      - '1025:1025'
+    networks:
+      - lumio-network
+    restart: unless-stopped
+
+  postgres-keycloak:
+    image: postgres:latest
+    container_name: postgres-keycloak
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${KEYCLOAK_DB_NAME}
+      POSTGRES_USER: ${KEYCLOAK_DB_USER}
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - keycloak-data:/var/lib/postgresql/data
+    ports:
+      - '5435:5432'
+    networks:
+      - lumio-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${KEYCLOAK_DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: lumio-keycloak
+    command: start-dev --import-realm --http-enabled=true --hostname-strict=false
+    restart: unless-stopped
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USER}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_HTTP_ENABLED: "true"
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres-keycloak:5432/${KEYCLOAK_DB_NAME}
+      KC_DB_USERNAME: ${KEYCLOAK_DB_USER}
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+    volumes:
+      - ./keycloak/realms:/opt/keycloak/data/import
+    ports:
+      - '8081:8080'
+      - '9000:9000'
+    depends_on:
+      postgres-keycloak:
+        condition: service_healthy
+    networks:
+      - lumio-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health/ready"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+volumes:
+  keycloak-data:
+  postgres-lumio-data:
+  localstack-data:
+
+networks:
+  lumio-network:
+    driver: bridge
