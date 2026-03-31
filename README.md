@@ -1,3 +1,5 @@
+[![Coverage](https://img.shields.io/badge/coverage-0%25-red)](#)
+
 <h1 align="center">✨ Lumio</h1>
 <p align="center"><i>Learn Brighter. Go Further</i></p>
 
