@@ -30,7 +30,7 @@ jobs:
         run: mvn clean test
 
       - name: Generate JaCoCo report
-        run: mvn jacoco:report
+        run: mvn clean verify -Dquarkus.jacoco.report=true
 
       - name: Build application
         run: mvn package
