@@ -2,15 +2,13 @@
 [![Coverage](https://img.shields.io/badge/coverage-0%25-red)](#)
 
 <h1 align="center">✨ Lumio</h1>
-<p align="center"><i>Learn Brighter. Go Further</i></p>
+<p align="center"><i>Learn Brighter. Go Further.</i></p>
 
 ## 🚀 About Lumio
 
-**Lumio** — _Learn Brighter. Go Further._
-
 Lumio is an ambitious commercial platform designed to redefine the way people learn and share knowledge online. The goal is to build a comprehensive digital marketplace where educators and creators can publish, manage, and monetize high-quality educational content across a wide range of subjects.
 
-Inspired by leading platforms like Udemy and Alura, Lumio aims to go beyond the standard learning experience by integrating modern, interactive features such as real-time chat and live streaming for immersive, instructor-led sessions.
+Lumio aims to go beyond the standard learning experience by integrating modern, interactive features such as real-time chat and live streaming for immersive, instructor-led sessions.
 
 ### 💡 Vision
 
@@ -56,6 +54,6 @@ This project is licensed under the [MIT License](LICENSE).
 ## Generate JaCoCo Report
 
 3. Run tests and generate coverage report: `mvn clean test`
-4. Open the report in:: `target/site/jacoco/index.html`
+4. Open the report in:: `target/jacoco-report/index.html`
 
 ---
