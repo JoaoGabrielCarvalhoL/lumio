@@ -1,5 +1,9 @@
 [![Build Status](https://github.com/JoaoGabrielCarvalhoL/lumio/actions/workflows/ci-main.yml/badge.svg)](https://github.com/JoaoGabrielCarvalhoL/lumio/actions/workflows/ci-main.yml)  
 [![Coverage](https://img.shields.io/badge/coverage-0%25-red)](#)
+![Status](https://img.shields.io/badge/status-under%20development-orange)
+
+![Java](https://img.shields.io/badge/Java-25-blue.svg)
+
 
 <h1 align="center">✨ Lumio</h1>
 <p align="center"><i>Learn Brighter. Go Further.</i></p>

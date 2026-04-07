@@ -16,8 +16,24 @@
           "temporary": false
         }
       ],
-      "realmRoles": ["ADMIN", "OWNER"]
-    }
+      "realmRoles": ["ADMIN"]
+    }, 
+	{
+	      "username": "carvalhocruz",
+	      "enabled": true,
+	      "emailVerified": true,
+	      "firstName": "Carvalho",
+	      "lastName": "Cruz",
+	      "email": "support@lumio.com",
+	      "credentials": [
+	        {
+	          "type": "password",
+	          "value": "development",
+	          "temporary": false
+	        }
+	      ],
+	      "realmRoles": ["OWNER"]
+	    }
   ],
   "roles": {
     "realm": [
@@ -39,7 +55,21 @@
       "redirectUris": ["http://localhost:8080/*"],
       "webOrigins": ["http://localhost:8080"],
       "standardFlowEnabled": true,
-      "directAccessGrantsEnabled": true
-    }
-  ]
+      "directAccessGrantsEnabled": true, 
+	  "serviceAccountsEnabled": true, 
+	  "authorizationServicesEnabled": true
+	}, 
+	{
+	      "clientId": "lumio-backend",
+	      "enabled": true,
+	      "protocol": "openid-connect",
+	      "publicClient": false,
+		  "secret": "Zp2Fw4Ei4lFq96GaEdAehSqCcp4epBHj",
+	      "serviceAccountsEnabled": true,
+	      "standardFlowEnabled": false,
+	      "directAccessGrantsEnabled": true,
+	      "authorizationServicesEnabled": false
+	    }
+]
+
 }
