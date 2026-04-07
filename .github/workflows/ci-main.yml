@@ -3,11 +3,11 @@ name: CI - Main Build
 on:
   pull_request:
     branches: ["main"]
-    types: [closed] # só dispara quando PR é fechado
+    types: [closed]
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true # só roda se o PR foi mergeado
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -26,8 +26,56 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
 
+      - name: Generate .env for Docker Compose
+        run: |
+          echo "LOCALSTACK_DOCKER_NAME=${{ secrets.LOCALSTACK_DOCKER_NAME }}" > .env
+          echo "DEBUG=${{ secrets.DEBUG }}" >> .env
+          echo "LOCALSTACK_AUTH_TOKEN=${{ secrets.LOCALSTACK_AUTH_TOKEN }}" >> .env
+          echo "KEYCLOAK_DB_NAME=${{ secrets.KEYCLOAK_DB_NAME }}" >> .env
+          echo "KEYCLOAK_DB_USER=${{ secrets.KEYCLOAK_DB_USER }}" >> .env
+          echo "KEYCLOAK_DB_PASSWORD=${{ secrets.KEYCLOAK_DB_PASSWORD }}" >> .env
+          echo "KEYCLOAK_ADMIN_USER=${{ secrets.KEYCLOAK_ADMIN_USER }}" >> .env
+          echo "KEYCLOAK_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}" >> .env
+          echo "OIDC_AUTH_SERVER=${{ secrets.OIDC_AUTH_SERVER }}" >> .env
+          echo "OIDC_CLIENT_ID=${{ secrets.OIDC_CLIENT_ID }}" >> .env
+          echo "OIDC_CREDENTIALS_SECRET=${{ secrets.OIDC_CREDENTIALS_SECRET }}" >> .env
+          echo "OIDC_APPLICATION_TYPE=${{ secrets.OIDC_APPLICATION_TYPE }}" >> .env
+          echo "KEYCLOAK_AUTH_URL=${{ secrets.KEYCLOAK_AUTH_URL }}" >> .env
+          echo "KEYCLOAK_ADMIN_URL=${{ secrets.KEYCLOAK_ADMIN_URL }}" >> .env
+          echo "KEYCLOAK_CONNECT_TIMEOUT=${{ secrets.KEYCLOAK_CONNECT_TIMEOUT }}" >> .env
+          echo "KEYCLOAK_READ_TIMEOUT=${{ secrets.KEYCLOAK_READ_TIMEOUT }}" >> .env
+          echo "KEYCLOAK_REALM=${{ secrets.KEYCLOAK_REALM }}" >> .env
+          echo "KEYCLOAK_CLIENT_ID=${{ secrets.KEYCLOAK_CLIENT_ID }}" >> .env
+          echo "KEYCLOAK_CLIENT_SECRET=${{ secrets.KEYCLOAK_CLIENT_SECRET }}" >> .env
+          echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}" >> .env
+          echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> .env
+          echo "AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }}" >> .env
+          echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> .env
+          echo "AWS_ENDPOINT=${{ secrets.AWS_ENDPOINT }}" >> .env
+          echo "AWS_BUCKET=${{ secrets.AWS_BUCKET }}" >> .env
+          echo "AWS_SQS_QUEUE_NAME=${{ secrets.AWS_SQS_QUEUE_NAME }}" >> .env
+          echo "AWS_SQS_QUEUE_URL=${{ secrets.AWS_SQS_QUEUE_URL }}" >> .env
+          echo "MAILER_HOST=${{ secrets.MAILER_HOST }}" >> .env
+          echo "MAILER_PORT=${{ secrets.MAILER_PORT }}" >> .env
+          echo "MAILER_FROM=${{ secrets.MAILER_FROM }}" >> .env
+
+      - name: Start Docker Compose
+        run: docker compose up -d
+
+      - name: Wait for Keycloak
+        run: |
+          echo "Waiting for Keycloak to be ready..."
+          for i in {1..30}; do
+            curl -f http://localhost:9000/health/ready && break
+            sleep 5
+          done
+
       - name: Run tests
-        run: mvn clean test
+        run: |
+          set -o allexport
+          source .env
+          set +o allexport
+          mvn clean test
 
       - name: Generate JaCoCo report
         run: mvn clean verify -Dquarkus.jacoco.report=true
@@ -40,3 +88,7 @@ jobs:
         with:
           name: coverage-report
           path: target/jacoco-report
+
+      - name: Tear down Docker Compose
+        if: always()
+        run: docker compose down
