@@ -19,7 +19,7 @@
       "realmRoles": ["ADMIN"]
     }, 
 	{
-	      "username": "carvalhocruz",
+	      "username": "usercruz",
 	      "enabled": true,
 	      "emailVerified": true,
 	      "firstName": "Carvalho",
@@ -32,8 +32,24 @@
 	          "temporary": false
 	        }
 	      ],
-	      "realmRoles": ["OWNER"]
-	    }
+	      "realmRoles": ["USER"]
+	}, 
+	{
+		      "username": "creatorcruz",
+		      "enabled": true,
+		      "emailVerified": true,
+		      "firstName": "Carvalho",
+		      "lastName": "Cruz",
+		      "email": "creator_support@lumio.com",
+		      "credentials": [
+		        {
+		          "type": "password",
+		          "value": "development",
+		          "temporary": false
+		        }
+		      ],
+		      "realmRoles": ["CREATOR"]
+		}
   ],
   "roles": {
     "realm": [
@@ -41,7 +57,10 @@
         "name": "ADMIN"
       }, 
 	  {
-	    "name": "OWNER"
+	    "name": "CREATOR"
+	  }, 
+	  {
+	    "name": "USER"
 	  }
     ]
   },
