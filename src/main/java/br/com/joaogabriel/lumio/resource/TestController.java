@@ -60,7 +60,8 @@ public class TestController {
         Response response = keycloakAdminManagementClient.createUser("lumio", userRequest);
 
         if (response.getStatus() == 201) {
-            return Response.ok("User created successfully!").build();
+        		response.getLocation();
+            return Response.ok(response.getLocation()).build();
         } else {
             String body = response.readEntity(String.class);
             return Response.status(response.getStatus())

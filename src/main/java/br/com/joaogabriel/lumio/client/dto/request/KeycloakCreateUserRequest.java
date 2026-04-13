@@ -10,7 +10,7 @@ public record KeycloakCreateUserRequest(
 	    Boolean emailVerified,
 	    String firstName,
 	    String lastName,
-	    List<String> requiredActions,
+	    List<KeycloakUserAction> requiredActions,
 	    List<KeycloakCredentialRequest> credentials,
 	    Map<String, List<String>> attributes) {
 
