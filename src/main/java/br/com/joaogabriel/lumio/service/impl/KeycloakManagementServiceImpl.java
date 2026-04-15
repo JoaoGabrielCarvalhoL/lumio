@@ -20,11 +20,12 @@ import br.com.joaogabriel.lumio.exception.KeycloakOperationException;
 import br.com.joaogabriel.lumio.exception.mapper.KeycloakErrorMapper;
 import br.com.joaogabriel.lumio.model.UserProvisioningResult;
 import br.com.joaogabriel.lumio.model.enumerations.UserProvisioningStatus;
+import br.com.joaogabriel.lumio.service.KeycloakManagementService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.core.Response;
 
 @ApplicationScoped
-public class KeycloakManagementServiceImpl {
+public class KeycloakManagementServiceImpl implements KeycloakManagementService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(KeycloakManagementServiceImpl.class);
 	
@@ -44,6 +45,7 @@ public class KeycloakManagementServiceImpl {
     @Timeout(3000)
     @CircuitBreaker(requestVolumeThreshold = 10, failureRatio = 0.5, delay = 5000)
     @Fallback(fallbackMethod = "createUserFallback")
+	@Override
 	public UserProvisioningResult createUser(KeycloakCreateUserRequest createUserRequest) {
 		logger.info("Creating user {}, into keycloak.", createUserRequest.username());
 		try (Response response = keycloakAdminManagementClient.createUser(this.realm, createUserRequest)) {
