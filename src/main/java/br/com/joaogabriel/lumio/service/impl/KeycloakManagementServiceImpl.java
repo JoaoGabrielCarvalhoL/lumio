@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
-import org.eclipse.microprofile.faulttolerance.Fallback;
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -14,12 +13,10 @@ import org.slf4j.LoggerFactory;
 
 import br.com.joaogabriel.lumio.client.KeycloakAdminManagementClient;
 import br.com.joaogabriel.lumio.client.dto.request.KeycloakCreateUserRequest;
-import br.com.joaogabriel.lumio.event.producer.KeycloakUserCreateQueueProducer;
 import br.com.joaogabriel.lumio.exception.KeycloakException;
-import br.com.joaogabriel.lumio.exception.KeycloakOperationException;
 import br.com.joaogabriel.lumio.exception.mapper.KeycloakErrorMapper;
 import br.com.joaogabriel.lumio.model.UserProvisioningResult;
-import br.com.joaogabriel.lumio.model.enumerations.UserProvisioningStatus;
+import br.com.joaogabriel.lumio.model.enumerations.ProvisioningStatus;
 import br.com.joaogabriel.lumio.service.KeycloakManagementService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.core.Response;
@@ -30,21 +27,18 @@ public class KeycloakManagementServiceImpl implements KeycloakManagementService 
 	private static final Logger logger = LoggerFactory.getLogger(KeycloakManagementServiceImpl.class);
 	
 	private final KeycloakAdminManagementClient keycloakAdminManagementClient;
-	private final KeycloakUserCreateQueueProducer producer;
+	
 	private final String realm;
 
 	public KeycloakManagementServiceImpl(@RestClient KeycloakAdminManagementClient keycloakAdminManagementClient, 
-			@ConfigProperty(name = "keycloak.realm") String realm, 
-			KeycloakUserCreateQueueProducer producer) {
+			@ConfigProperty(name = "keycloak.realm") String realm) {
 		this.keycloakAdminManagementClient = keycloakAdminManagementClient;
 		this.realm = realm;
-		this.producer = producer;
 	}
 	
 	@Retry(maxRetries = 3, delay = 200)
     @Timeout(3000)
     @CircuitBreaker(requestVolumeThreshold = 10, failureRatio = 0.5, delay = 5000)
-    @Fallback(fallbackMethod = "createUserFallback")
 	@Override
 	public UserProvisioningResult createUser(KeycloakCreateUserRequest createUserRequest) {
 		logger.info("Creating user {}, into keycloak.", createUserRequest.username());
@@ -56,33 +50,10 @@ public class KeycloakManagementServiceImpl implements KeycloakManagementService 
 		
 			logger.info("User created successfully. Username: {}", createUserRequest.username());
 			return new UserProvisioningResult(this.extractIdFromHeaderLocation(response), 
-					UserProvisioningStatus.CREATED);
-		} catch (KeycloakOperationException e) {
-			throw e;
-		} catch (Exception e) {
-			throw KeycloakErrorMapper.fromStatus(500, "Unexpected error", e);
+					ProvisioningStatus.CREATED, null);
 		}
 	}
-	
-	public UserProvisioningResult createUserFallback(KeycloakCreateUserRequest createUserRequest, Throwable throwable) {
-		if (throwable instanceof KeycloakOperationException exception) {
-			if (!exception.getErrorContext().retryable()) {
-				throw exception;
-			}
-			
-			logger.warn("Keycloak unavailable. Sending user {} to sqs fallback.", createUserRequest.username());
-			
-			producer.send(createUserRequest); //enviar pela camada de serviço
-			return new UserProvisioningResult(null, 
-					UserProvisioningStatus.PENDING_QUEUE);
-		}
-		
-		logger.error("Unexpected fallback error for user {}", createUserRequest.username(), throwable);
-		
-		return new UserProvisioningResult(null, 
-				UserProvisioningStatus.FAILED);
-	}
-	
+
 	private String extractIdFromHeaderLocation(Response response) {
 		URI location = Optional.ofNullable(response.getLocation())
 	            .orElseThrow(() -> new KeycloakException("Missing Location header in Keycloak Response."));

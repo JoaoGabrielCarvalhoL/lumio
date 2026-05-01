@@ -1,12 +1,15 @@
 package br.com.joaogabriel.lumio.domain.service.impl;
 
-import br.com.joaogabriel.lumio.client.repository.UserRepository;
 import br.com.joaogabriel.lumio.domain.service.UserUniquenessChecker;
+import br.com.joaogabriel.lumio.repository.UserRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class UserUniquenessCheckerImpl implements UserUniquenessChecker {
 
 	private final UserRepository userRepository;
-	
+
 	public UserUniquenessCheckerImpl(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
