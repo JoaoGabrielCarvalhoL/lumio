@@ -16,6 +16,18 @@ services:
       - lumio-network
     restart: unless-stopped
 
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: lumio-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_PASS}
+    ports:
+      - "5672:5672"
+      - "15672:15672" # Dashboard
+    networks:
+      - lumio-network
+
   mail-dev:
     container_name: mail-dev-lumio
     image: maildev/maildev:latest

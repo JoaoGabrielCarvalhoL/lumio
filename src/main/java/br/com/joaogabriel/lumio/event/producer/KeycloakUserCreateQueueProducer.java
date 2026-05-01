@@ -1,33 +1,34 @@
 package br.com.joaogabriel.lumio.event.producer;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+import java.util.UUID;
+
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import br.com.joaogabriel.lumio.client.dto.request.KeycloakCreateUserRequest;
 import jakarta.enterprise.context.ApplicationScoped;
-import software.amazon.awssdk.services.sqs.SqsClient;
-import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
+
 
 @ApplicationScoped
 public class KeycloakUserCreateQueueProducer {
 	private static final Logger logger = LoggerFactory.getLogger(KeycloakUserCreateQueueProducer.class);
+
+	private final Emitter<String> emitter;
 	
-	private final SqsClient sqsClient;
-	private final String queueUrl;
-	
-	public KeycloakUserCreateQueueProducer(SqsClient sqsClient, 
-			@ConfigProperty(name = "aws.sqs.queue.keycloak-user-create") String queueUrl) {
-		this.sqsClient = sqsClient;
-		this.queueUrl = queueUrl;
+	public KeycloakUserCreateQueueProducer(@Channel("user-create-out") Emitter<String> emitter) {
+		this.emitter = emitter;
 	}
 	
-	public void send(KeycloakCreateUserRequest event) {
-		SendMessageRequest message = SendMessageRequest.builder()
-				.queueUrl(this.queueUrl)
-				.messageBody("")
-				.build();
-		this.sqsClient.sendMessage(message);
-		logger.info("Event sent to queue: {}. Payload: {}", this.queueUrl, event);
+	public void send(UUID id) {
+		String payload = id.toString();
+		emitter.send(payload)
+				.toCompletableFuture()
+				.whenComplete((success, failure) -> {
+					if (failure != null) {
+						logger.error("Failed to send event to RabbitMQ. Payload: {}", id, failure);
+					} else {
+						logger.info("Event successfully sent to RabbitMQ. Payload identifier: {}", id);
+					}
+				});
 	}
 }

@@ -1,4 +1,4 @@
-package br.com.joaogabriel.lumio.client.repository;
+package br.com.joaogabriel.lumio.repository;
 
 import java.util.UUID;
 

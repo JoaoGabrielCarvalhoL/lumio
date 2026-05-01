@@ -1,16 +1,14 @@
 package br.com.joaogabriel.lumio.model;
 
-import br.com.joaogabriel.lumio.model.enumerations.UserProvisioningStatus;
+import br.com.joaogabriel.lumio.model.enumerations.ProvisioningStatus;
 
 public record UserProvisioningResult(
 		String keycloakId, 
-		UserProvisioningStatus status) {
+		ProvisioningStatus status, 
+		String errorMessage) {
 
 	public boolean isActive() {
-		return this.status == UserProvisioningStatus.CREATED;
+		return this.status == ProvisioningStatus.CREATED;
 	}
 	
-	public boolean isPending() {
-		return this.status == UserProvisioningStatus.PENDING_QUEUE;
-	}
 }

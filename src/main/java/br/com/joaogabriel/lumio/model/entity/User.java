@@ -48,4 +48,45 @@ public class User {
 	
 	public User() {}
 
+	public User(String keycloakId, String externalId, String username, String email, String firstName,
+			String lastName) {
+		this.keycloakId = keycloakId;
+		this.externalId = externalId;
+		this.username = username;
+		this.email = email;
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+	
+	public UUID getId() {
+		return this.id;
+	}
+
+	public String getKeycloakId() {
+		return keycloakId;
+	}
+
+	public String getExternalId() {
+		return externalId;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public List<Address> getAddresses() {
+		return addresses;
+	}
 }

@@ -4,9 +4,11 @@ import java.util.Objects;
 
 import br.com.joaogabriel.lumio.annotation.UniqueEmail;
 import br.com.joaogabriel.lumio.domain.service.UserUniquenessChecker;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
+@ApplicationScoped
 public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
 	
 	private final UserUniquenessChecker checker;
