@@ -14,6 +14,7 @@ import jakarta.ws.rs.ext.Provider;
 @Provider
 public class ConstraintViolationExceptionHandler implements ExceptionMapper<ConstraintViolationException> {
 
+	//TODO: Refactor to CONFLICT
 	@Override
 	public Response toResponse(ConstraintViolationException exception) {
 		Map<String, String> errors = new HashMap<>();

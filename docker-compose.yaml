@@ -22,6 +22,9 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBIT_PASS}
+      RABBITMQ_DEFAULT_VHOST: development
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672" # Dashboard
@@ -95,6 +98,7 @@ volumes:
   keycloak-data:
   postgres-lumio-data:
   localstack-data:
+  rabbitmq_data:
 
 networks:
   lumio-network:

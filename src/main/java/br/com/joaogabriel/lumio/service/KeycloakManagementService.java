@@ -6,4 +6,5 @@ import br.com.joaogabriel.lumio.model.UserProvisioningResult;
 public interface KeycloakManagementService {
 
 	UserProvisioningResult createUser(KeycloakCreateUserRequest createUserRequest);
+
 }
