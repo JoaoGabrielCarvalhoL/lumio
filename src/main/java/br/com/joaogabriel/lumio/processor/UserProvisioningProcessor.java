@@ -16,6 +16,7 @@ import br.com.joaogabriel.lumio.repository.UserRepository;
 import br.com.joaogabriel.lumio.service.KeycloakManagementService;
 import br.com.joaogabriel.lumio.util.Serializer;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
@@ -51,13 +52,21 @@ public class UserProvisioningProcessor {
 
     @Transactional
     public void process(UUID provisioningId) {
-        UserProvisioning provisioning = Optional.ofNullable(this.userProvisioningRepository.findById(provisioningId))
+        UserProvisioning provisioning = Optional.ofNullable(this.userProvisioningRepository.findById(provisioningId, LockModeType.PESSIMISTIC_WRITE))
                 .orElseThrow(() -> new ResourceNotFoundException("Provisioning with id: " + provisioningId + " not found"));
 
         if (ProvisioningStatus.CREATED.equals(provisioning.getStatus())) {
             LOG.warn("User {} already provisioned. Skipping.", provisioning.getUsername());
             throw new AlreadyProcessedException("User " + provisioning.getUsername() + " already provisioned");
         }
+
+        if (ProvisioningStatus.PROCESSING.equals(provisioning.getStatus())) {
+            LOG.info("User {} is already being processed by another thread. Skipping.", provisioning.getUsername());
+            throw new AlreadyProcessedException("User " + provisioning.getUsername() + " already provisioned");
+        }
+
+        provisioning.setStatus(ProvisioningStatus.PROCESSING);
+        this.userProvisioningRepository.flush();
 
         try {
             UserCreateRequest request = this.serializer.deserialize(provisioning.getPayload(), UserCreateRequest.class);

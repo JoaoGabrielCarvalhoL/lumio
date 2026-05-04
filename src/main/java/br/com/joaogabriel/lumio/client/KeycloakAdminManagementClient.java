@@ -78,6 +78,12 @@ public interface KeycloakAdminManagementClient {
     @Path("/users/{id}/logout")
     Response logoutUser(@PathParam("realm") String realm, @PathParam("id") String id);
 
+    @GET
+    @Path("/roles/{role-name}")
+    @Produces(MediaType.APPLICATION_JSON)
+    KeycloakRoleResponse getRoleByName(@PathParam("realm") String realm,
+                                       @PathParam("role-name") String roleName);
+
     @POST
     @Path("/users/{id}/role-mappings/realm")
     @Consumes(MediaType.APPLICATION_JSON)

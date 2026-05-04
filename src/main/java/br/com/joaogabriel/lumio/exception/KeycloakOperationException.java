@@ -8,7 +8,7 @@ public class KeycloakOperationException extends RuntimeException {
 	private final KeycloakErrorContext errorContext;
     
     public KeycloakOperationException(KeycloakErrorContext errorContext) {
-    		super(errorContext.message());
+    		super(errorContext.message(), errorContext.cause());
     		this.errorContext = errorContext;
     		
     }

@@ -2,8 +2,10 @@ package br.com.joaogabriel.lumio.event.producer;
 
 import java.util.UUID;
 
+import io.smallrye.reactive.messaging.rabbitmq.OutgoingRabbitMQMetadata;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.eclipse.microprofile.reactive.messaging.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,7 +13,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class KeycloakUserCreateQueueProducer {
-	private static final Logger logger = LoggerFactory.getLogger(KeycloakUserCreateQueueProducer.class);
+	private static final Logger LOG = LoggerFactory.getLogger(KeycloakUserCreateQueueProducer.class);
 
 	private final Emitter<String> emitter;
 	
@@ -21,14 +23,14 @@ public class KeycloakUserCreateQueueProducer {
 	
 	public void send(UUID id) {
 		String payload = id.toString();
-		emitter.send(payload)
-				.toCompletableFuture()
-				.whenComplete((success, failure) -> {
-					if (failure != null) {
-						logger.error("Failed to send event to RabbitMQ. Payload: {}", id, failure);
-					} else {
-						logger.info("Event successfully sent to RabbitMQ. Payload identifier: {}", id);
-					}
-				});
+
+		OutgoingRabbitMQMetadata metadata = OutgoingRabbitMQMetadata.builder()
+				.withRoutingKey("user-create-key")
+				.build();
+
+		Message<String> message = Message.of(payload).addMetadata(metadata);
+
+		emitter.send(message);
+		LOG.info("Sent message to user-create-queue: " + message.getPayload());
 	}
 }
