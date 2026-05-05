@@ -31,6 +31,6 @@ public class KeycloakUserCreateQueueProducer {
 		Message<String> message = Message.of(payload).addMetadata(metadata);
 
 		emitter.send(message);
-		LOG.info("Sent message to user-create-queue: " + message.getPayload());
+		LOG.info("Sent message to user-create-queue: {}", message.getPayload());
 	}
 }
