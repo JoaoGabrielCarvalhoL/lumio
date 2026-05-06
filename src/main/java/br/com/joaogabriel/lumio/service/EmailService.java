@@ -1,8 +1,8 @@
 package br.com.joaogabriel.lumio.service;
 
-import br.com.joaogabriel.lumio.model.dto.response.UserCreatedEventResponse;
+import java.util.UUID;
 
 public interface EmailService {
 
-    void sendWelcomeEmail(UserCreatedEventResponse user);
+    void sendWelcomeEmail(final UUID id);
 }

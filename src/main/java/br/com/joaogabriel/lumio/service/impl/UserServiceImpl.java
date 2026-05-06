@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import br.com.joaogabriel.lumio.model.dto.response.UserContextResponse;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,13 +45,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public ProvisioningResponse save(UserCreateRequest userCreateRequest) {
+	public ProvisioningResponse save(UserCreateRequest userCreateRequest, UserContextResponse userContext) {
 		logger.info("Starting provisioning process for user: {}", userCreateRequest.username());
 		String externalId = generateExternalId(userCreateRequest);
 		String payload = this.serializer.serialize(userCreateRequest);
 
 		UserProvisioning provisioning = new UserProvisioning(userCreateRequest.username(), userCreateRequest.email(), externalId, 0, null,
-				ProvisioningStatus.PENDING_PROVISIONING, payload);
+				ProvisioningStatus.PENDING_PROVISIONING, payload, userContext.ip(), userContext.rawAgent());
 
 		this.userProvisioningRepository.persist(provisioning);
 		producer.send(provisioning.getId());

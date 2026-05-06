@@ -3,23 +3,23 @@ package br.com.joaogabriel.lumio.processor;
 import br.com.joaogabriel.lumio.client.dto.request.KeycloakCreateUserRequest;
 import br.com.joaogabriel.lumio.client.dto.request.KeycloakCredentialRequest;
 import br.com.joaogabriel.lumio.client.dto.request.KeycloakUserAction;
+import br.com.joaogabriel.lumio.client.dto.response.IpResponse;
+import br.com.joaogabriel.lumio.event.producer.UserCreatedEventProducer;
 import br.com.joaogabriel.lumio.exception.AlreadyProcessedException;
 import br.com.joaogabriel.lumio.exception.ResourceNotFoundException;
 import br.com.joaogabriel.lumio.model.UserProvisioningResult;
 import br.com.joaogabriel.lumio.model.dto.request.UserCreateRequest;
-import br.com.joaogabriel.lumio.model.dto.response.UserCreatedEventResponse;
 import br.com.joaogabriel.lumio.model.entity.User;
 import br.com.joaogabriel.lumio.model.entity.UserProvisioning;
 import br.com.joaogabriel.lumio.model.enumerations.ProvisioningStatus;
 import br.com.joaogabriel.lumio.repository.UserProvisioningRepository;
 import br.com.joaogabriel.lumio.repository.UserRepository;
+import br.com.joaogabriel.lumio.service.IpGeolocationService;
 import br.com.joaogabriel.lumio.service.KeycloakManagementService;
 import br.com.joaogabriel.lumio.util.Serializer;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,17 +37,19 @@ public class UserProvisioningProcessor {
     private final UserRepository userRepository;
     private final KeycloakManagementService  keycloakManagementService;
     private final Serializer serializer;
-
-    private final Emitter<UserCreatedEventResponse> notificationEmitter;
+    private final UserCreatedEventProducer userCreatedEventProducer;
+    private final IpGeolocationService ipGeolocationService;
 
     public UserProvisioningProcessor(UserProvisioningRepository userProvisioningRepository, UserRepository userRepository,
                                      KeycloakManagementService keycloakManagementService, Serializer serializer,
-                                     @Channel("user-notifiable-out") Emitter<UserCreatedEventResponse> notificationEmitter) {
+                                     UserCreatedEventProducer userCreatedEventProducer,
+                                     IpGeolocationService ipGeolocationService) {
         this.userProvisioningRepository = userProvisioningRepository;
         this.userRepository = userRepository;
         this.keycloakManagementService = keycloakManagementService;
         this.serializer = serializer;
-        this.notificationEmitter = notificationEmitter;
+        this.userCreatedEventProducer = userCreatedEventProducer;
+        this.ipGeolocationService = ipGeolocationService;
     }
 
     @Transactional
@@ -66,6 +68,13 @@ public class UserProvisioningProcessor {
         }
 
         provisioning.setStatus(ProvisioningStatus.PROCESSING);
+        Optional<IpResponse> details = this.ipGeolocationService.getDetails(provisioning);
+        //TODO: After creating relationship between User and UserMetadata, set value on user.setUserMetadata before persisting.
+        details.ifPresent(response -> {
+            LOG.info("IP: {}", provisioning.getIp());
+            LOG.info("Raw User-Agent: {}", provisioning.getRawUserAgent());
+            LOG.info("Works. IpResponse: {}", response);
+        });
         this.userProvisioningRepository.flush();
 
         try {
@@ -81,7 +90,7 @@ public class UserProvisioningProcessor {
                 provisioning.setStatus(ProvisioningStatus.CREATED);
                 provisioning.setErrorMessage(null);
 
-                notificationEmitter.send(new UserCreatedEventResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getUsername()));
+                this.userCreatedEventProducer.sendSuccessNotification(user.getId().toString());
 
                 LOG.info("User {} successfully created in Keycloak and Local DB.", provisioning.getUsername());
             } else {

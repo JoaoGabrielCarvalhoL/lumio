@@ -1,6 +1,5 @@
 package br.com.joaogabriel.lumio.event.consumer;
 
-import br.com.joaogabriel.lumio.model.dto.response.UserCreatedEventResponse;
 import br.com.joaogabriel.lumio.model.entity.ProcessedEvent;
 import br.com.joaogabriel.lumio.repository.ProcessedEventRepository;
 import br.com.joaogabriel.lumio.service.EmailService;
@@ -13,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @ApplicationScoped
 public class UserNotificationConsumer {
@@ -30,17 +30,16 @@ public class UserNotificationConsumer {
     @Acknowledgment(Acknowledgment.Strategy.POST_PROCESSING)
     @RunOnVirtualThread
     @Transactional
-    public void onUserCreated(UserCreatedEventResponse event) {
-        String eventId = String.format("welcome-email-%s", event.id());
+    public void onUserCreated(String id) {
+        String eventId = String.format("welcome-email-%s", id);
         Optional<ProcessedEvent> processed = this.processedEventRepository.findByEventId(eventId);
-
         if(processed.isEmpty()) {
-            LOG.info("Received notification event for email: {}", event.email());
+            LOG.info("Received notification event for email: {}", id);
             try {
-                emailService.sendWelcomeEmail(event);
+                emailService.sendWelcomeEmail(UUID.fromString(id));
                 this.processedEventRepository.persist(new ProcessedEvent(eventId));
             } catch (Exception e) {
-                LOG.error("Failed to send welcome email to {}", event.email(), e);
+                LOG.error("Failed to send welcome email to {}", id, e);
                 throw e;
             }
         } else {
