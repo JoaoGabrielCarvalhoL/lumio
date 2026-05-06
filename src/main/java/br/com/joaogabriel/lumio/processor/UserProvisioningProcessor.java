@@ -3,6 +3,7 @@ package br.com.joaogabriel.lumio.processor;
 import br.com.joaogabriel.lumio.client.dto.request.KeycloakCreateUserRequest;
 import br.com.joaogabriel.lumio.client.dto.request.KeycloakCredentialRequest;
 import br.com.joaogabriel.lumio.client.dto.request.KeycloakUserAction;
+import br.com.joaogabriel.lumio.client.dto.response.IpResponse;
 import br.com.joaogabriel.lumio.event.producer.UserCreatedEventProducer;
 import br.com.joaogabriel.lumio.exception.AlreadyProcessedException;
 import br.com.joaogabriel.lumio.exception.ResourceNotFoundException;
@@ -13,6 +14,7 @@ import br.com.joaogabriel.lumio.model.entity.UserProvisioning;
 import br.com.joaogabriel.lumio.model.enumerations.ProvisioningStatus;
 import br.com.joaogabriel.lumio.repository.UserProvisioningRepository;
 import br.com.joaogabriel.lumio.repository.UserRepository;
+import br.com.joaogabriel.lumio.service.IpGeolocationService;
 import br.com.joaogabriel.lumio.service.KeycloakManagementService;
 import br.com.joaogabriel.lumio.util.Serializer;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -36,15 +38,18 @@ public class UserProvisioningProcessor {
     private final KeycloakManagementService  keycloakManagementService;
     private final Serializer serializer;
     private final UserCreatedEventProducer userCreatedEventProducer;
+    private final IpGeolocationService ipGeolocationService;
 
     public UserProvisioningProcessor(UserProvisioningRepository userProvisioningRepository, UserRepository userRepository,
                                      KeycloakManagementService keycloakManagementService, Serializer serializer,
-                                     UserCreatedEventProducer userCreatedEventProducer) {
+                                     UserCreatedEventProducer userCreatedEventProducer,
+                                     IpGeolocationService ipGeolocationService) {
         this.userProvisioningRepository = userProvisioningRepository;
         this.userRepository = userRepository;
         this.keycloakManagementService = keycloakManagementService;
         this.serializer = serializer;
         this.userCreatedEventProducer = userCreatedEventProducer;
+        this.ipGeolocationService = ipGeolocationService;
     }
 
     @Transactional
@@ -63,6 +68,13 @@ public class UserProvisioningProcessor {
         }
 
         provisioning.setStatus(ProvisioningStatus.PROCESSING);
+        Optional<IpResponse> details = this.ipGeolocationService.getDetails(provisioning);
+        //TODO: After creating relationship between User and UserMetadata, set value on user.setUserMetadata before persisting.
+        details.ifPresent(response -> {
+            LOG.info("IP: {}", provisioning.getIp());
+            LOG.info("Raw User-Agent: {}", provisioning.getRawUserAgent());
+            LOG.info("Works. IpResponse: {}", response);
+        });
         this.userProvisioningRepository.flush();
 
         try {

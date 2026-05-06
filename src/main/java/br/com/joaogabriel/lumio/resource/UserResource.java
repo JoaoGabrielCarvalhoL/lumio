@@ -27,7 +27,7 @@ public interface UserResource {
 			@APIResponse(responseCode = "409", name = "CONFLICT", description = "User already exists.")
 	})
 	@Produces(MediaType.APPLICATION_JSON)
-	Response create(@Valid UserCreateRequest request);
+	Response create(@Valid UserCreateRequest request, @Context HttpHeaders headers);
 
 	@PATCH
 	@Path("/{id}/password")

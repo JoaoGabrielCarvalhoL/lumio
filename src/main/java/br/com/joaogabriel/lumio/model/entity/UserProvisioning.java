@@ -4,16 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import br.com.joaogabriel.lumio.model.enumerations.ProvisioningStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Table(name = "tb_user_provisioning")
 @Entity
@@ -28,6 +19,10 @@ public class UserProvisioning {
 	private String email; 
 	
 	private String externalId;
+
+	private String ip;
+	@Lob
+	private String rawUserAgent;
 	
 	private Integer retryCount;
 	
@@ -45,7 +40,7 @@ public class UserProvisioning {
 	public UserProvisioning() {}
 	
 	public UserProvisioning(String username, String email, String externalId, Integer retryCount,
-			String errorMessage, ProvisioningStatus status, String payload) {
+			String errorMessage, ProvisioningStatus status, String payload, String ip, String rawUserAgent) {
 		this.username = username;
 		this.email = email;
 		this.externalId = externalId;
@@ -53,6 +48,8 @@ public class UserProvisioning {
 		this.errorMessage = errorMessage;
 		this.status = status;
 		this.payload = payload;
+		this.ip = ip;
+		this.rawUserAgent = rawUserAgent;
 	}
 
 
@@ -141,5 +138,21 @@ public class UserProvisioning {
 
 	public String getExternalId() {
 		return externalId;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public String getRawUserAgent() {
+		return rawUserAgent;
+	}
+
+	public void setRawUserAgent(String rawUserAgent) {
+		this.rawUserAgent = rawUserAgent;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 }
