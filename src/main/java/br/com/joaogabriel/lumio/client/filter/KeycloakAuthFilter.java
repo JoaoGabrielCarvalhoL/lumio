@@ -2,6 +2,7 @@ package br.com.joaogabriel.lumio.client.filter;
 
 import java.io.IOException;
 
+import jakarta.enterprise.context.Dependent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +12,7 @@ import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.ext.Provider;
 
-@Provider
+@Dependent
 public class KeycloakAuthFilter implements ClientRequestFilter {
 	
 	private final IdentityProvider identityProvider;
