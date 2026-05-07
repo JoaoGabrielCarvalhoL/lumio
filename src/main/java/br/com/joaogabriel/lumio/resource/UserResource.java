@@ -22,7 +22,7 @@ public interface UserResource {
 	@POST
 	@Operation(summary = "Create a new user", description = "Provisions a user in Keycloak and triggers the welcome flow.")
 	@APIResponses(value = {
-			@APIResponse(responseCode = "201", name = "CREATED", description = "User created successfully."),
+			@APIResponse(responseCode = "200", name = "CREATED", description = "User created successfully."),
 			@APIResponse(responseCode = "400", name = "BAD_REQUEST", description = "Invalid input data."),
 			@APIResponse(responseCode = "409", name = "CONFLICT", description = "User already exists.")
 	})
