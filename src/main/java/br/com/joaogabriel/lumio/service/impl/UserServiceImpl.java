@@ -1,8 +1,6 @@
 package br.com.joaogabriel.lumio.service.impl;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import br.com.joaogabriel.lumio.model.dto.response.UserContextResponse;
@@ -10,19 +8,12 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import br.com.joaogabriel.lumio.client.dto.request.KeycloakCreateUserRequest;
-import br.com.joaogabriel.lumio.client.dto.request.KeycloakCredentialRequest;
-import br.com.joaogabriel.lumio.client.dto.request.KeycloakUserAction;
 import br.com.joaogabriel.lumio.event.producer.KeycloakUserCreateQueueProducer;
-import br.com.joaogabriel.lumio.model.UserProvisioningResult;
 import br.com.joaogabriel.lumio.model.dto.request.UserCreateRequest;
 import br.com.joaogabriel.lumio.model.dto.response.ProvisioningResponse;
-import br.com.joaogabriel.lumio.model.entity.User;
 import br.com.joaogabriel.lumio.model.entity.UserProvisioning;
 import br.com.joaogabriel.lumio.model.enumerations.ProvisioningStatus;
 import br.com.joaogabriel.lumio.repository.UserProvisioningRepository;
-import br.com.joaogabriel.lumio.repository.UserRepository;
-import br.com.joaogabriel.lumio.service.KeycloakManagementService;
 import br.com.joaogabriel.lumio.util.Serializer;
 import br.com.joaogabriel.lumio.service.UserService;
 import jakarta.enterprise.context.ApplicationScoped;

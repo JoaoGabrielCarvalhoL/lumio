@@ -1,6 +1,5 @@
 package br.com.joaogabriel.lumio.client;
 
-import br.com.joaogabriel.lumio.client.dto.response.IpResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;

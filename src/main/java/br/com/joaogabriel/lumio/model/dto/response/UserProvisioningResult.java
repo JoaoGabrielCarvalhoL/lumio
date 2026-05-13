@@ -1,4 +1,4 @@
-package br.com.joaogabriel.lumio.model;
+package br.com.joaogabriel.lumio.model.dto.response;
 
 import br.com.joaogabriel.lumio.model.enumerations.ProvisioningStatus;
 

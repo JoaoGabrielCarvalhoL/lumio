@@ -7,7 +7,7 @@ import br.com.joaogabriel.lumio.client.dto.response.IpResponse;
 import br.com.joaogabriel.lumio.event.producer.UserCreatedEventProducer;
 import br.com.joaogabriel.lumio.exception.AlreadyProcessedException;
 import br.com.joaogabriel.lumio.exception.ResourceNotFoundException;
-import br.com.joaogabriel.lumio.model.UserProvisioningResult;
+import br.com.joaogabriel.lumio.model.dto.response.UserProvisioningResult;
 import br.com.joaogabriel.lumio.model.dto.request.UserCreateRequest;
 import br.com.joaogabriel.lumio.model.entity.User;
 import br.com.joaogabriel.lumio.model.entity.UserProvisioning;

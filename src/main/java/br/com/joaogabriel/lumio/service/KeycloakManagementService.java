@@ -1,7 +1,7 @@
 package br.com.joaogabriel.lumio.service;
 
 import br.com.joaogabriel.lumio.client.dto.request.KeycloakCreateUserRequest;
-import br.com.joaogabriel.lumio.model.UserProvisioningResult;
+import br.com.joaogabriel.lumio.model.dto.response.UserProvisioningResult;
 
 public interface KeycloakManagementService {
 
