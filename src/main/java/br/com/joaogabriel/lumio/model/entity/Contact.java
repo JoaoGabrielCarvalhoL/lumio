@@ -21,7 +21,7 @@ public class Contact {
 	private UUID id;
 	
 	@Enumerated(EnumType.STRING)
-	private ContactType contactType;
+	private ContactType type;
 	
 	@Column(nullable = false)
 	private String contact;

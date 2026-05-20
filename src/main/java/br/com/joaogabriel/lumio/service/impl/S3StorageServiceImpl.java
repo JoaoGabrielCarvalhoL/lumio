@@ -3,7 +3,6 @@ package br.com.joaogabriel.lumio.service.impl;
 import br.com.joaogabriel.lumio.model.dto.request.FileUploadRequest;
 import br.com.joaogabriel.lumio.model.dto.response.FileUploadResponse;
 import br.com.joaogabriel.lumio.service.S3StorageService;
-import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -19,7 +18,7 @@ import java.time.LocalDateTime;
 
 @ApplicationScoped
 public class S3StorageServiceImpl implements S3StorageService {
-    private final static Logger LOG = LoggerFactory.getLogger(S3StorageServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(S3StorageServiceImpl.class);
 
     private final S3Client s3Client;
     private final S3Presigner s3Presigner;
