@@ -3,9 +3,7 @@ package br.com.joaogabriel.lumio.service;
 import br.com.joaogabriel.lumio.model.dto.request.FileUploadRequest;
 import br.com.joaogabriel.lumio.model.dto.response.FileUploadResponse;
 
-import java.util.UUID;
+public interface ResourceStorageService {
 
-public interface VideoStorageService {
-
-    FileUploadResponse upload(UUID courseId, UUID lessonId, FileUploadRequest request);
+    FileUploadResponse upload(final String key, final FileUploadRequest request);
 }

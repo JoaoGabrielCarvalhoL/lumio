@@ -12,7 +12,9 @@ public interface S3StorageService {
 
     Boolean exists(final String bucket, final String key);
 
-    URL generatePresignedUrl(final String bucket, final String key, Duration duration);
+    URL generatePresignedUploadUrl(final String bucket, final String key, Duration duration);
+
+    URL generatePresignedDownloadUrl(final String bucket, final String key, Duration duration);
 
     void delete(final String bucket, final String key);
 }
