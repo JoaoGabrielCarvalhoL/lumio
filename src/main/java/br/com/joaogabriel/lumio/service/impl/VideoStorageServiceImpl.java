@@ -46,6 +46,7 @@ public class VideoStorageServiceImpl implements VideoStorageService {
         this.lessonVideoRepository = lessonVideoRepository;
     }
 
+    @Override
     @Transactional
     public FileUploadResponse upload(UUID courseId, UUID lessonId, FileUploadRequest request) {
         Optional.ofNullable(this.courseRepository.findById(courseId))
