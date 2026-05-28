@@ -7,6 +7,7 @@ import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -30,4 +31,7 @@ public class CourseRepository implements PanacheRepositoryBase<Course, UUID> {
                 .list();
     }
 
+    public Optional<Course> findByTrailerKey(String key) {
+        return find("trailer.s3Key = ?1", key).firstResultOptional();
+    }
 }

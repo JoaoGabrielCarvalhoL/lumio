@@ -1,4 +1,4 @@
-package br.com.joaogabriel.lumio.event.consumer;
+package br.com.joaogabriel.lumio.messaging.consumer;
 
 import br.com.joaogabriel.lumio.model.entity.ProcessedEvent;
 import br.com.joaogabriel.lumio.repository.ProcessedEventRepository;

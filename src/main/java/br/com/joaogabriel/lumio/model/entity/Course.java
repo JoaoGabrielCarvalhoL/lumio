@@ -29,8 +29,8 @@ public class Course {
     @Column(nullable = false)
     private String thumbnail;
 
-    @Column(nullable = false)
-    private String trailer;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private CourseTrailer trailer;
 
     @Column(nullable = false)
     private Boolean isActive;
@@ -62,6 +62,7 @@ public class Course {
     @JoinColumn(nullable = false)
     private Category category;
 
+    @OneToOne(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private CourseAnalytics analytics;
 
     public Course() {}
@@ -106,11 +107,11 @@ public class Course {
         this.thumbnail = thumbnail;
     }
 
-    public String getTrailer() {
+    public CourseTrailer getTrailer() {
         return trailer;
     }
 
-    public void setTrailer(String trailer) {
+    public void setTrailer(CourseTrailer trailer) {
         this.trailer = trailer;
     }
 

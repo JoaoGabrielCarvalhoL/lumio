@@ -1,6 +1,5 @@
-package br.com.joaogabriel.lumio.event.producer;
+package br.com.joaogabriel.lumio.messaging.producer;
 
-import br.com.joaogabriel.lumio.model.dto.response.UserCreatedEventResponse;
 import io.smallrye.reactive.messaging.rabbitmq.OutgoingRabbitMQMetadata;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.reactive.messaging.Channel;
@@ -8,8 +7,6 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.UUID;
 
 @ApplicationScoped
 public class UserCreatedEventProducer {

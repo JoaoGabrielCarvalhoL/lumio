@@ -22,6 +22,9 @@ public class Lesson {
     @JoinColumn(nullable = false)
     private Course course;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private LessonVideo lessonVideo;
+
     public Lesson() {}
 
     public UUID getId() {
@@ -54,5 +57,13 @@ public class Lesson {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public LessonVideo getLessonVideo() {
+        return lessonVideo;
+    }
+
+    public void setLessonVideo(LessonVideo lessonVideo) {
+        this.lessonVideo = lessonVideo;
     }
 }

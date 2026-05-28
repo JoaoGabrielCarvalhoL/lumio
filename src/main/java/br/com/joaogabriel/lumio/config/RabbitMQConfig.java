@@ -21,9 +21,6 @@ public class RabbitMQConfig {
     private String videoUploadQueue;
     private String videoUploadExchange;
 
-    private String resourceUploadQueue;
-    private String resourceUploadExchange;
-
     private String userNotificationQueue;
     private String userEventsExchange;
 
@@ -37,8 +34,6 @@ public class RabbitMQConfig {
                           @ConfigProperty(name = "USER_CREATE_EXCHANGE") String userCreateExchange,
                           @ConfigProperty(name = "VIDEO_UPLOAD_QUEUE") String videoUploadQueue,
                           @ConfigProperty(name = "VIDEO_UPLOAD_EXCHANGE") String videoUploadExchange,
-                          @ConfigProperty(name = "RESOURCE_UPLOAD_QUEUE") String resourceUploadQueue,
-                          @ConfigProperty(name = "RESOURCE_UPLOAD_EXCHANGE") String resourceUploadExchange,
                           @ConfigProperty(name = "USER_NOTIFICATIONS_QUEUE") String userNotificationQueue,
                           @ConfigProperty(name = "USER_EVENTS_EXCHANGE") String userEventsExchange,
                           @ConfigProperty(name = "RABBIT_HOST") String host,
@@ -49,8 +44,6 @@ public class RabbitMQConfig {
         this.userCreateExchange = userCreateExchange;
         this.videoUploadQueue = videoUploadQueue;
         this.videoUploadExchange = videoUploadExchange;
-        this.resourceUploadQueue = resourceUploadQueue;
-        this.resourceUploadExchange = resourceUploadExchange;
         this.userNotificationQueue = userNotificationQueue;
         this.userEventsExchange = userEventsExchange;
         this.host = host;
@@ -79,10 +72,6 @@ public class RabbitMQConfig {
                 .compose(v -> client.exchangeDeclare(videoUploadExchange, "direct", true, false))
                 .compose(v -> client.queueDeclare(videoUploadQueue, true, false, false))
                 .compose(v -> client.queueBind(videoUploadQueue, videoUploadExchange, "video-upload-key"))
-
-                .compose(v -> client.exchangeDeclare(resourceUploadExchange, "direct", true, false))
-                .compose(v -> client.queueDeclare(resourceUploadQueue, true, false, false))
-                .compose(v -> client.queueBind(resourceUploadQueue, resourceUploadExchange, "resource-upload-key"))
 
                 .compose(v -> client.exchangeDeclare(userEventsExchange, "direct", true, false))
                 .compose(v -> client.queueDeclare(userNotificationQueue, true, false, false))
