@@ -26,10 +26,55 @@ public class Contact {
 	@Column(nullable = false)
 	private String contact;
 	
-	private Boolean isPrimary;
+	private Boolean primary;
 	
-	private Boolean isVerified;
+	private Boolean verified;
 	
 	public Contact() {}
 
+	public Contact(ContactType type, String contact, Boolean primary) {
+		this.type = type;
+		this.contact = contact;
+		this.primary = primary;
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public ContactType getType() {
+		return type;
+	}
+
+	public void setType(ContactType type) {
+		this.type = type;
+	}
+
+	public String getContact() {
+		return contact;
+	}
+
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+
+	public Boolean getPrimary() {
+		return primary;
+	}
+
+	public void setPrimary(Boolean primary) {
+		primary = primary;
+	}
+
+	public Boolean getVerified() {
+		return verified;
+	}
+
+	public void setVerified(Boolean verified) {
+		verified = verified;
+	}
 }

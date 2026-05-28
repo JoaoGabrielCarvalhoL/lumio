@@ -1,9 +1,9 @@
-package br.com.joaogabriel.lumio.event.consumer;
+package br.com.joaogabriel.lumio.messaging.consumer;
 
 import java.util.UUID;
 
 import br.com.joaogabriel.lumio.exception.AlreadyProcessedException;
-import br.com.joaogabriel.lumio.processor.UserProvisioningProcessor;
+import br.com.joaogabriel.lumio.messaging.processor.UserProvisioningProcessor;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import org.eclipse.microprofile.reactive.messaging.Acknowledgment;
 import org.eclipse.microprofile.reactive.messaging.Incoming;

@@ -39,6 +39,7 @@ public class TrailerStorageServiceImpl implements TrailerStorageService {
         return this.s3StorageService.upload(request, bucket, key);
     }
 
+    @Override
     public TrailerUploadResponse initiateUpload(String key, FileUploadRequest request) {
         validateVideoType(request.file().contentType());
         validateFileSize(request.file().size());

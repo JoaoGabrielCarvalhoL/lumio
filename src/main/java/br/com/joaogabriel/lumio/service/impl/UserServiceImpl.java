@@ -8,7 +8,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import br.com.joaogabriel.lumio.event.producer.KeycloakUserCreateQueueProducer;
+import br.com.joaogabriel.lumio.messaging.producer.KeycloakUserCreateQueueProducer;
 import br.com.joaogabriel.lumio.model.dto.request.UserCreateRequest;
 import br.com.joaogabriel.lumio.model.dto.response.ProvisioningResponse;
 import br.com.joaogabriel.lumio.model.entity.UserProvisioning;

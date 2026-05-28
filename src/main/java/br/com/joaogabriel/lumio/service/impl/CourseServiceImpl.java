@@ -7,8 +7,11 @@ import br.com.joaogabriel.lumio.model.dto.request.CourseUpdateRequest;
 import br.com.joaogabriel.lumio.model.dto.request.FileUploadRequest;
 import br.com.joaogabriel.lumio.model.dto.response.CourseResponse;
 import br.com.joaogabriel.lumio.model.dto.response.FileUploadResponse;
+import br.com.joaogabriel.lumio.model.dto.response.TrailerUploadResponse;
 import br.com.joaogabriel.lumio.model.entity.Category;
 import br.com.joaogabriel.lumio.model.entity.Course;
+import br.com.joaogabriel.lumio.model.entity.CourseTrailer;
+import br.com.joaogabriel.lumio.model.enumerations.MediaStatus;
 import br.com.joaogabriel.lumio.repository.CategoryRepository;
 import br.com.joaogabriel.lumio.repository.CourseRepository;
 import br.com.joaogabriel.lumio.service.CourseService;
@@ -123,7 +126,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public void uploadFreeTrailer(UUID courseId, FileUploadRequest request) {
+    public TrailerUploadResponse uploadFreeTrailer(UUID courseId, FileUploadRequest request) {
         Course course = this.courseRepository.findByIdOptional(courseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + courseId));
         String keycloakId = this.jwt.getSubject();
@@ -131,10 +134,25 @@ public class CourseServiceImpl implements CourseService {
         if (!this.courseRepository.isOwner(courseId, keycloakId)) {
             throw new ForbiddenException("Forbidden");
         }
-        String key = String.format("%s/courses/%s/trailers/", keycloakId, courseId);
-        FileUploadResponse uploaded = this.trailerStorageService.upload(key, request);
-        course.setTrailer(uploaded.key());
+        String key = String.format("%s/courses/%s/trailers/%s", keycloakId, courseId,
+                request.file().fileName());
+        LOG.info("Initiating asynchronous trailer upload flow for courseId: {}.", courseId);
+
+        course.setTrailer(new CourseTrailer(key, request.file().size(), MediaStatus.PENDING_UPLOAD));
         this.courseRepository.persist(course);
-        LOG.info("Trailer uploaded successfully for courseId: {}.", courseId);
+        return this.trailerStorageService.initiateUpload(key, request);
+    }
+
+    @Override
+    public void processTrailerActivation(String key, Long size) {
+        LOG.info("Activating trailer for courseId: {}", key);
+        Course course = this.courseRepository.findByTrailerKey(key)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found for key: " + key));
+
+        CourseTrailer courseTrailer = course.getTrailer();
+        courseTrailer.activate(MediaStatus.AVAILABLE, size);
+        this.courseRepository.persist(course);
+        LOG.info("Trailer for course ID {} successfully marked as AVAILABLE.", course.getId());
+
     }
 }

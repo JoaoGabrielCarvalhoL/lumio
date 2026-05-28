@@ -1,10 +1,10 @@
-package br.com.joaogabriel.lumio.processor;
+package br.com.joaogabriel.lumio.messaging.processor;
 
 import br.com.joaogabriel.lumio.client.dto.request.KeycloakCreateUserRequest;
 import br.com.joaogabriel.lumio.client.dto.request.KeycloakCredentialRequest;
 import br.com.joaogabriel.lumio.client.dto.request.KeycloakUserAction;
 import br.com.joaogabriel.lumio.client.dto.response.IpResponse;
-import br.com.joaogabriel.lumio.event.producer.UserCreatedEventProducer;
+import br.com.joaogabriel.lumio.messaging.producer.UserCreatedEventProducer;
 import br.com.joaogabriel.lumio.exception.AlreadyProcessedException;
 import br.com.joaogabriel.lumio.exception.ResourceNotFoundException;
 import br.com.joaogabriel.lumio.model.dto.response.UserProvisioningResult;

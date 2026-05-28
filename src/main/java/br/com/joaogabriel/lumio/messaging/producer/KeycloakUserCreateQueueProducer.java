@@ -1,4 +1,4 @@
-package br.com.joaogabriel.lumio.event.producer;
+package br.com.joaogabriel.lumio.messaging.producer;
 
 import java.util.UUID;
 
