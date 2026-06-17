@@ -28,6 +28,17 @@ public class VideoUploadProcessor implements MediaUploadProcessor {
 
     @Override
     public void process(S3UploadEventMessage s3UploadEventMessage) {
-        this.lessonVideoService.processVideoActivation(s3UploadEventMessage.key(), s3UploadEventMessage.size());
+        if (s3UploadEventMessage.key() != null) {
+            LOG.info("VideoUploadProcessor received event for key: {}", s3UploadEventMessage.key());
+            try {
+                this.lessonVideoService.processVideoActivation(s3UploadEventMessage.key(), s3UploadEventMessage.size());
+            } catch (Exception e) {
+                LOG.error("Error while processing video upload event", e);
+                throw e;
+            }
+        } else {
+            LOG.warn("Skipping video upload processing due to missing key metadata.");
+        }
+
     }
 }

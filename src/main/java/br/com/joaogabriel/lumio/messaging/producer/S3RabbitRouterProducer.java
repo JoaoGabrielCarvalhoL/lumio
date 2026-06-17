@@ -28,7 +28,7 @@ public class S3RabbitRouterProducer {
     private static final Logger LOG = LoggerFactory.getLogger(S3RabbitRouterProducer.class);
 
     private final Emitter<S3UploadEventMessage> emitter;
-    private String queueUrl;
+    private final String queueUrl;
     private final SqsClient sqsClient;
     private final ObjectMapper objectMapper;
     private final ManagedExecutor  managedExecutor;
