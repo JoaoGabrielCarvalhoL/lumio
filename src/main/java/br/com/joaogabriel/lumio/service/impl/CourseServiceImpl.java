@@ -15,13 +15,11 @@ import br.com.joaogabriel.lumio.model.enumerations.MediaStatus;
 import br.com.joaogabriel.lumio.repository.CategoryRepository;
 import br.com.joaogabriel.lumio.repository.CourseRepository;
 import br.com.joaogabriel.lumio.service.CourseService;
-import br.com.joaogabriel.lumio.service.S3StorageService;
 import br.com.joaogabriel.lumio.service.ThumbnailStorageService;
 import br.com.joaogabriel.lumio.service.TrailerStorageService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.ForbiddenException;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,14 +31,13 @@ import java.util.UUID;
 @ApplicationScoped
 public class CourseServiceImpl implements CourseService {
 
-    private final static Logger LOG = LoggerFactory.getLogger(CourseServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CourseServiceImpl.class);
     private final CourseRepository courseRepository;
     private final CategoryRepository categoryRepository;
     private final CourseMapper courseMapper;
     private final ThumbnailStorageService thumbnailStorageService;
     private final TrailerStorageService trailerStorageService;
     private final JsonWebToken jwt;
-
 
     public CourseServiceImpl(CourseRepository courseRepository,
                              CategoryRepository categoryRepository,
@@ -113,7 +110,7 @@ public class CourseServiceImpl implements CourseService {
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + courseId));
         String keycloakId = this.jwt.getSubject();
 
-        if (!this.courseRepository.isOwner(courseId, keycloakId)) {
+        if (Boolean.FALSE.equals(this.courseRepository.isOwner(courseId, keycloakId))) {
             throw new ForbiddenException("Forbidden");
         }
 
@@ -131,7 +128,7 @@ public class CourseServiceImpl implements CourseService {
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + courseId));
         String keycloakId = this.jwt.getSubject();
 
-        if (!this.courseRepository.isOwner(courseId, keycloakId)) {
+        if (Boolean.FALSE.equals(this.courseRepository.isOwner(courseId, keycloakId))) {
             throw new ForbiddenException("Forbidden");
         }
         String key = String.format("%s/courses/%s/trailers/%s", keycloakId, courseId,
@@ -145,7 +142,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void processTrailerActivation(String key, Long size) {
-        LOG.info("Activating trailer for courseId: {}", key);
+        LOG.info("Activating trailer for key: {}", key);
         Course course = this.courseRepository.findByTrailerKey(key)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found for key: " + key));
 
